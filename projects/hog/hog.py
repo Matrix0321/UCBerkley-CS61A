@@ -268,7 +268,12 @@ def make_averaged(original_function, trials_count=1000):
     3.0
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    def try_demo(*args):
+        ans = [original_function(*args) for i in range(trials_count)]
+        res = sum(ans) / trials_count
+        return res
+    return try_demo
+
     # END PROBLEM 8
 
 
@@ -282,7 +287,9 @@ def max_scoring_num_rolls(dice=six_sided, trials_count=1000):
     1
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    make = make_averaged(roll_dice, trials_count)
+    trail = [make(i, dice) for i in range(1, 11)]
+    return trail.index(max(trail)) + 1
     # END PROBLEM 9
 
 
@@ -332,7 +339,7 @@ def bacon_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     rolls NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    return 6  # Replace this statement
+    return 0 if free_bacon(opponent_score) >= cutoff else num_rolls
     # END PROBLEM 10
 
 
@@ -342,17 +349,30 @@ def swap_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     non-beneficial swap. Otherwise, it rolls NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 6  # Replace this statement
+    free = free_bacon(opponent_score)
+    if is_swap(score + free, opponent_score):
+        return num_rolls if opponent_score <= score + free else 0
+    else:
+        return 0 if free >=cutoff else num_rolls
     # END PROBLEM 11
 
 
-def final_strategy(score, opponent_score):
+def final_strategy(score, opponent_score, cutoff = 4, num_rolls = 5):
     """Write a brief description of your final strategy.
 
     *** YOUR DESCRIPTION HERE ***
     """
     # BEGIN PROBLEM 12
-    return 6  # Replace this statement
+    if is_swap(score + 1,opponent_score) and opponent_score - score >= cutoff:
+        return 0
+    free = free_bacon(opponent_score)
+    if is_swap(score + free, opponent_score):
+        if score + free >= opponent_score:
+            return num_rolls
+        else:
+            return num_rolls if opponent_score - score - free < cutoff else 0
+    else:
+        return num_rolls if free < cutoff else 0
     # END PROBLEM 12
 
 ##########################
