@@ -32,5 +32,12 @@ def make_generators_generator(g):
     6
     9
     """
-    "*** YOUR CODE HERE ***"
+    def gen_helper(lst):
+        yield from lst
+    yield_sofar = []
+    gg = g()
+    print("DEBUG:", gg)
+    for x in gg:
+        yield_sofar.append(x)
+        yield gen_helper(yield_sofar.copy())
 
