@@ -7,7 +7,10 @@ def convert_link(link):
     >>> convert_link(Link.empty)
     []
     """
-    "*** YOUR CODE HERE ***"
+    if not link:
+        return []
+    else:
+        return [link.first] + convert_link(link.rest)
 
 
 def every_other(s):
@@ -27,7 +30,10 @@ def every_other(s):
     >>> singleton
     Link(4)
     """
-    "*** YOUR CODE HERE ***"
+    if s == Link.empty or s.rest == Link.empty:
+        return None
+    s.rest = s.rest.rest
+    return every_other(s.rest)
 
 
 def label_squarer(t):
@@ -38,7 +44,11 @@ def label_squarer(t):
     >>> t
     Tree(1, [Tree(9, [Tree(25)]), Tree(49)])
     """
-    "*** YOUR CODE HERE ***"
+    t.label = t.label * t.label
+    if t.is_leaf():
+        return None
+    for b in t.branches:
+        label_squarer(b)
 
 
 def cumulative_mul(t):
@@ -50,7 +60,14 @@ def cumulative_mul(t):
     >>> t
     Tree(105, [Tree(15, [Tree(5)]), Tree(7)])
     """
-    "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        return t.label
+    for b in t.branches:
+        cumulative_mul(b)
+    mul = t.label
+    for b in t.branches:
+        mul *= b.label
+    t.label = mul
 
 
 def has_cycle(link):
@@ -67,7 +84,18 @@ def has_cycle(link):
     >>> has_cycle(u)
     False
     """
-    "*** YOUR CODE HERE ***"
+    if link is Link.empty:
+        return False
+    else:
+        slow, fast = link, link.rest
+        while fast is not Link.empty:
+            if fast.rest is Link.empty:
+                return False
+            slow = slow.rest
+            fast = fast.rest.rest
+            if slow is fast:
+                return True
+        return False
 
 def has_cycle_constant(link):
     """Return whether link contains a cycle.
@@ -80,7 +108,18 @@ def has_cycle_constant(link):
     >>> has_cycle_constant(t)
     False
     """
-    "*** YOUR CODE HERE ***"
+    if link is Link.empty:
+        return False
+    slow, fast = link, link.rest
+    while fast is not Link.empty:
+        if fast.rest == Link.empty:
+            return False
+        elif fast is slow or fast.rest is slow:
+            return True
+        else:
+            slow = slow.rest
+            fast = fast.rest.rest
+    return False
 
 
 def reverse_other(t):
@@ -96,7 +135,6 @@ def reverse_other(t):
     >>> t
     Tree(1, [Tree(8, [Tree(3, [Tree(5), Tree(4)]), Tree(6, [Tree(7)])]), Tree(2)])
     """
-    "*** YOUR CODE HERE ***"
 
 
 class Link:
