@@ -14,7 +14,13 @@ def prune_min(t):
     >>> t3
     Tree(6, [Tree(3, [Tree(1)])])
     """
-    "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        return None
+    if t.branches[0].label < t.branches[1].label:
+        t.branches = [t.branches[0]]
+    else:
+        t.branches = [t.branches[1]]
+    prune_min(t.branches[0])
 
 
 def align_skeleton(skeleton, code):
@@ -58,7 +64,7 @@ def align_skeleton(skeleton, code):
         if skeleton_idx == len(skeleton) and code_idx < len(code):
             edits = "".join(["+[" + c + "]" for c in code[code_idx:]])
             return _________, ______________
-        
+
         possibilities = []
         skel_char, code_char = skeleton[skeleton_idx], code[code_idx]
         # Match
@@ -92,7 +98,20 @@ def num_splits(s, d):
     >>> num_splits([1, 4, 6, 8, 2, 9, 5], 3)
     12
     """
-    "*** YOUR CODE HERE ***"
+    n = len(s)
+    res = 0
+    def helper(first, second, index):
+        nonlocal res
+        if index == n:
+            if abs(first - second) <= d:
+                res += 1
+            return 
+        else:
+            helper(first + s[index], second, index + 1)
+            helper(first, second + s[index], index + 1)
+
+    helper(0, 0, 0)
+    return res // 2
 
 
 def insert(link, value, index):
@@ -110,14 +129,14 @@ def insert(link, value, index):
     >>> insert(link, 4, 5)
     IndexError
     """
-    if ____________________:
-        ____________________
-        ____________________
-        ____________________
-    elif ____________________:
-        ____________________
+    if link.rest is Link.empty:
+        raise IndexError
+    elif index == 0:
+        x = Link(link.first, link.rest)
+        link.first = value
+        link.rest = x
     else:
-        ____________________
+        insert(link.rest, value, index - 1)
 
 
 
