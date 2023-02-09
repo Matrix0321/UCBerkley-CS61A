@@ -68,7 +68,13 @@ def accuracy(typed, reference):
     typed_words = split(typed)
     reference_words = split(reference)
     # BEGIN PROBLEM 3
-    "*** YOUR CODE HERE ***"
+    tot = len(typed_words)
+    cor = 0
+    if tot == 0:
+        return 0.0
+    for t, r in zip(typed_words, reference_words):
+        cor += (t == r)
+    return  100 * cor / tot
     # END PROBLEM 3
 
 
@@ -76,7 +82,8 @@ def wpm(typed, elapsed):
     """Return the words-per-minute (WPM) of the TYPED string."""
     assert elapsed > 0, 'Elapsed time must be positive'
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    wpm = len(typed) * 12 / elapsed
+    return wpm
     # END PROBLEM 4
 
 
@@ -86,9 +93,15 @@ def autocorrect(user_word, valid_words, diff_function, limit):
     than LIMIT.
     """
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    if user_word in valid_words:
+        return user_word
+    words_diff = [diff_function(user_word, v, limit) for v in valid_words]
+    lowest_difference_word, lowest_diff = min(zip(valid_words, words_diff), key=lambda item: item[1])
+    if lowest_diff > limit:
+        return user_word
+    else:
+        return lowest_difference_word
     # END PROBLEM 5
-
 
 def shifty_shifts(start, goal, limit):
     """A diff function for autocorrect that determines how many letters
@@ -96,7 +109,17 @@ def shifty_shifts(start, goal, limit):
     their lengths.
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    if len(start) == 0:
+        return len(goal)
+    if len(goal) == 0:
+        return len(start)
+    if start[0] != goal[0]:
+        if limit == 0:
+            return 1
+        else:
+            return 1 + shifty_shifts(start[1:], goal[1:], limit - 1)
+    else:
+        return shifty_shifts(start[1:], goal[1:], limit)
     # END PROBLEM 6
 
 
