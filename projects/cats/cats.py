@@ -196,7 +196,13 @@ def time_per_word(times_per_player, words):
         words: a list of words, in the order they are typed.
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    res = []
+    for player in times_per_player:
+        time = []
+        for i in range(len(player) - 1):
+            time.append(player[i + 1] - player[i])
+        res.append(time)
+    return game(words, res)
     # END PROBLEM 9
 
 
@@ -211,7 +217,19 @@ def fastest_words(game):
     players = range(len(all_times(game)))  # An index for each player
     words = range(len(all_words(game)))    # An index for each word
     # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
+    res = []
+    for _ in range(len(players)):
+        res.append([])
+
+    for index in range(len(words)):
+        min_time = all_times(game)[0][index]
+        min_index = 0
+        for i in range(len(players)):
+            if all_times(game)[i][index] < min_time:
+                min_time = all_times(game)[i][index]
+                min_index = i
+        res[min_index].append(all_words(game)[index])
+    return res
     # END PROBLEM 10
 
 
@@ -266,7 +284,19 @@ def key_distance_diff(start, goal, limit):
     goal = goal.lower() #converts the string to lowercase
 
     # BEGIN PROBLEM EC1
-    "*** YOUR CODE HERE ***"
+    if limit < 0:
+        return float('inf')
+    if len(start) == 0:
+        return len(goal)
+    elif len(goal) == 0:
+        return len(start)
+    elif start[0] == goal[0]:
+        return key_distance_diff(start[1:], goal[1:], limit)
+    else:
+        diff1 = 1 + key_distance_diff(start, goal[1:], limit - 1)
+        diff2 = 1 + key_distance_diff(start[1:], goal, limit - 1) 
+        diff3 = key_distance[(start[0], goal[0])] + key_distance_diff(start[1:], goal[1:], limit - 1) 
+        return min(diff1, diff2, diff3)
     # END PROBLEM EC1
 
 def memo(f):
